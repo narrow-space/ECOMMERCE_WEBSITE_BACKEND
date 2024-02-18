@@ -78,6 +78,17 @@ exports.getBrand = async (req, res) => {
   }
 
 }
+///get a single brand//
+exports.getsingleBrand = async (req, res) => {
+
+  try {
+    const getabrand = await brandDb.findById(req.params.id);
+    res.status(200).json(getabrand);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+
+}
 
 
 ///getCategory//

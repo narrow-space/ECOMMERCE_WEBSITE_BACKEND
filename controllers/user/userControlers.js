@@ -138,7 +138,7 @@ exports.Forgotpasssword = async (req, res) => {
       const renderTemplete = ejs.render(emailTempleteRead, data)
       if (setuserToken) {
         const mailOptions = {
-          from: process.env.EMAIL,
+          from: "hximranhasan@gmail.com",
           to: email,
           subject: "Sending Email For Password Reset",
           html: renderTemplete
