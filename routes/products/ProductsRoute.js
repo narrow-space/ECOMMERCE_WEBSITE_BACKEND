@@ -13,8 +13,6 @@ const categoryupload = require("../../multerconfig/Category/categoryStorageConfi
 router.post("/addbrand", adminAuthentication,productControler.AddBrand);
 ///get brand//
 router.get("/getbrand",productControler.getBrand);
-///get a single brand//
-router.get("/getbrand/:id",productControler.getsingleBrand);
 
 
 ///Category Routes
