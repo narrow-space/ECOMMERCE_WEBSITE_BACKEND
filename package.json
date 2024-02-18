@@ -11,9 +11,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "engines": {
-    "node": "18.18.2"
-  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.0",
