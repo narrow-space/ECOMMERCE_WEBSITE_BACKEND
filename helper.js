@@ -6,7 +6,7 @@ exports.transporter = nodemailer.createTransport({
     auth: {
 
         user: "hximranhasan@gmail.com",
-        pass: "baounhjvzwpcqlck"
+        pass: process.env.PASSWORD
 
     }
 })

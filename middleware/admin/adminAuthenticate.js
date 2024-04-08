@@ -1,6 +1,6 @@
 const adminDb = require("../../model/admin/adminModal");
 const jwt = require("jsonwebtoken");
-const Secret_Key = "ffffasfijijdii";
+const Secret_Key = process.env.ADMIN_SECRET_KEY;
 const adminAuthentication = async (req,res,next)=>{
      try {
         const token =req.headers.authorization;

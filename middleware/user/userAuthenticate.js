@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userDb = require("../../model/user/userModal");
-const Secret_Key = "fbfdbjsduuqndcbjtrtr";
+const Secret_Key = process.env.USER_SECRET_KEY;
 
 const userAuthentication = async (req, res, next) => {
     try {
