@@ -3,7 +3,7 @@ const cloudinary = require("../../cloudinary/cloudinary");
 const productDb = require("../../model/product/productModel");
 const reviewDb = require("../../model/product/ProductReviewModal");
 const fs = require("fs");
-const brandDb = require("../../model/product/productBrandModal");
+const brandDb = require("../../model/product/productBrand")
 const { ObjectId } = require('mongodb');
 const bannerDb = require("../../model/BannerImages/BannerImages");
 
