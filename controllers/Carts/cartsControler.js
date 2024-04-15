@@ -57,7 +57,6 @@ exports.AddtoCart = async (req, res) => {
 ////Getcart items controler//
 
 exports.Getcart = async (req, res) => {
-
     try {
         const getcarts = await cartDb.aggregate([
             {
@@ -68,21 +67,30 @@ exports.Getcart = async (req, res) => {
                     from: "productmodels",
                     localField: "productid",
                     foreignField: "_id",
-                    as: "productdetils"
+                    as: "details"
+                }
+            },
+            ///getting frist data from details array
+
+            {
+                $project: {
+                    _id: 1,
+                    userid: 1,
+                    productid: 1,
+                    quantity:1,
+                    details:{$arrayElemAt:['$details',0]}////Extract frist ellement from array
 
                 }
             }
+        ]);
 
 
-
-
-        ])
-
-        res.status(200).json(getcarts)
+        res.status(200).json(getcarts);
     } catch (error) {
-        res.status(400).json(error)
+        res.status(400).json(error);
     }
-}
+};
+
 
 ////REmove Items From CaRts
 exports.RemoveSingleItemFromCart = async (req, res) => {

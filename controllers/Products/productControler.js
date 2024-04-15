@@ -3,7 +3,7 @@ const cloudinary = require("../../cloudinary/cloudinary");
 const productDb = require("../../model/product/productModel");
 const reviewDb = require("../../model/product/ProductReviewModal");
 const fs = require("fs");
-const brandDb = require("../../model/product/productBrand")
+const brandDb = require("../../model/product/productBrandmodal")
 const { ObjectId } = require('mongodb');
 const bannerDb = require("../../model/BannerImages/BannerImages");
 
@@ -117,50 +117,38 @@ exports.Addproducts = async (req, res) => {
     sizes,
     colors,
     brand,
-
   } = req.body;
-
-
 
   const imageUrlList = [];
   for (let i = 0; i < file.length; i++) {
     const locaFilePath = file[i].path;
-
     const result = await cloudinary.uploader.upload(locaFilePath);
-
     imageUrlList.push(result.secure_url);
-
-
   }
+
   try {
-
-
-    ////Exsisting product Find////
+    // Check if the product already exists
     const existingProduct = await productDb.findOne({
       productName: productName,
-
     });
     if (existingProduct) {
-      return res.status(400).json({ error: "Product already exists" }); // Send response and exit function
+      return res.status(400).json({ error: "Product already exists" });
     }
-    ///Exisit category Find//
-    const newcatid = new ObjectId(categoryid)
-    const categoryFound = await categorydb.findOne({
-      _id: newcatid
-    })
 
+    // Find the category by ID
+    const categoryFound = await categorydb.findById(categoryid);
 
     if (!categoryFound) {
-      return res.status(400).json({ error: "category not found,please create a category first or check category name" })
-    }
-    ///Exisit Brand Find//
-    const brandFound = await brandDb.findOne({
-      name: brand
-    })
-    if (!brandFound) {
-      return res.status(400).json({ error: "Brand not found,please create a brand first or check brand name" })
+      return res.status(400).json({ error: "Category not found" });
     }
 
+    // Find the brand by name
+    const brandFound = await brandDb.findOne({ name: brand });
+    if (!brandFound) {
+      return res.status(400).json({ error: "Brand not found" });
+    }
+
+    // Create a new product
     const addproduct = new productDb({
       productName,
       price,
@@ -169,30 +157,69 @@ exports.Addproducts = async (req, res) => {
       description,
       categoryid,
       type,
-
       sizes,
       colors,
       brand,
-
       images: imageUrlList,
     });
 
-    // Associate product with category and brand
+    // Save the product
+    await addproduct.save();
+
+    // Update the category with the new product
     categoryFound.products.push(addproduct);
     categoryFound.brands.push(addproduct.brand);
-    brandFound.products.push(addproduct);
 
-    // Save changes
+    // Save changes to the category
     await categoryFound.save();
+
+    // Update the brand with the new product
+    brandFound.products.push(addproduct);
     await brandFound.save();
-    await addproduct.save();
 
     res.status(200).json(addproduct);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+};
 
-}
+
+
+ ///Delete Products controler
+exports.Deleteproducts = async (req, res) => {
+  const { productid } = req.params;
+  try {
+    // Find the product to be deleted
+    const deletedProduct = await productDb.findById(productid);
+
+    if (!deletedProduct) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    // Remove product reference from its associated category
+    const categoryFound = await categorydb.findOneAndUpdate(
+      { products: { $in: [productid] } }, // Find the category that contains the product
+      { $pull: { products: productid } }, // Pull the product reference from the category's products array
+      { new: true }
+    );
+
+    if (!categoryFound) {
+      return res.status(404).json({ error: "Category not found" });
+    }
+
+    // Delete the product
+    await productDb.findByIdAndDelete(productid);
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
+
+
 
 ///Search products///
 exports.SearchProducts = async (req, res) => {
@@ -401,16 +428,16 @@ exports.updateProduct = async (req, res) => {
         new: true,
         runValidators: true,
       })
-    await categorydb.findOneAndUpdate(
-      { products: productId },
-      { $pull: { products: productId } }
-    );
+    // await categorydb.findOneAndUpdate(
+    //   { products: productId },
+    //   { $pull: { products: productId } }
+    // );
 
 
-    await categorydb.findByIdAndUpdate(
-      newCategoryId,
-      { $addToSet: { products: productId } }
-    )
+    // await categorydb.findByIdAndUpdate(
+    //   newCategoryId,
+    //   { $addToSet: { products: productId } }
+    // )
 
 
 
@@ -478,19 +505,7 @@ exports.NewArival = async (req, res) => {
     res.status(400).json(error);
   }
 };
-///Delete Products controler
-exports.Deleteproducts = async (req, res) => {
-  const { productid } = req.params;
-  console.log(productid)
-  try {
-    const deleteproducts = await productDb.findByIdAndDelete({
-      _id: productid,
-    });
-    res.status(200).json(deleteproducts);
-  } catch (error) {
-    res.status(400).json(error);
-  }
-};
+
 
 ///Customer Review Controler//
 exports.ProductReview = async (req, res) => {

@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     },
     brand: {
         type: String,
-        require: true
+        required: true
     },
 
 
@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
 
     images: [{
         type: String,
-        require:true
+        required:true
        
     }]
 
@@ -42,30 +42,26 @@ const productSchema = new mongoose.Schema({
 
     discount: {
         type: Number,
-        rquired: true
+        required: true
     },
     quantity: {
         type: Number,
-        rquired: true
+        required: true
     },
     description: {
         type: String,
-        rquired: true
+        required: true
     },
     categoryid: {
         type: String,
    
-        rquired: true,
+        required: true,
     },
-    // category:{
-    //     type:String,
-    //     ref:"categoryModels",
-    //     rquired: true
-    // }
+    
 }, { timestamps: true })
 
 
-const productDb = new mongoose.model("ProductModel", productSchema)
+const productDb = new mongoose.model("productmodels", productSchema)
 
 
 module.exports = productDb

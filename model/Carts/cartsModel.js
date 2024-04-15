@@ -1,5 +1,4 @@
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 const cartSchema = new mongoose.Schema({
     userid: {
@@ -7,12 +6,14 @@ const cartSchema = new mongoose.Schema({
         required: true
     },
     productid: {
-        type: Object,
+        type: mongoose.Schema.Types.ObjectId, 
         required: true
     },
     quantity: {
         type: Number
     }
 }, { timestamps: true });
-const cartDb = new mongoose.model("carts", cartSchema)
-module.exports = cartDb
+
+const cartDb = mongoose.model("carts", cartSchema);
+
+module.exports = cartDb;

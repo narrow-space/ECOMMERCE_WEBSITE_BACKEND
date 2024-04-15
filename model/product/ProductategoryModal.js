@@ -12,7 +12,7 @@ const productCategorySchema = new mongoose.Schema(
     products: [
       {
         type: Object,
-        ref: "ProductModel",
+        ref: "productmodels",
       },
     ],
     description: {
