@@ -129,7 +129,7 @@ exports.Forgotpasssword = async (req, res) => {
 
       ///SEt token and logo in ejs file///
       const data = {
-        passwordresetlink: `http://localhost:3000/resetpassword/${userFind.id}/${setuserToken.
+        passwordresetlink: `https://eshopmart.netlify.app/resetpassword/${userFind.id}/${setuserToken.
           verifytoken}`,
         logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Gmail_icon_%282020%29.svg/2560px-Gmail_icon_%282020%29.svg.png"
       }
